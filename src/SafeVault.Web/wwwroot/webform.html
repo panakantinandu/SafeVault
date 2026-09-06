@@ -1,0 +1,24 @@
+<!-- webform.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SafeVault - Register</title>
+</head>
+<body>
+    <form action="/submit" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required
+               minlength="3" maxlength="30" pattern="[A-Za-z0-9_\-\.]+"
+               title="3-30 characters: letters, numbers, underscore, hyphen, period only">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required maxlength="100">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="8" maxlength="128">
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
