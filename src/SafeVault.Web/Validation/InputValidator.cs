@@ -30,6 +30,10 @@ public static class InputValidator
         return !string.IsNullOrEmpty(password) && password.Length is >= 8 and <= 128;
     }
 
+    private static readonly HashSet<string> AllowedRoles = new(StringComparer.Ordinal) { "user", "admin" };
+
+    public static bool IsValidRole(string? role) => role is not null && AllowedRoles.Contains(role);
+
     public static string EncodeForHtml(string input) => HtmlEncoder.Default.Encode(input);
 
     // Defense-in-depth only: parameterized queries and EncodeForHtml remain the real defenses.

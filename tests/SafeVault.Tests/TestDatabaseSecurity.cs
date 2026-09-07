@@ -155,4 +155,40 @@ public class TestDatabaseSecurity
 
         Assert.That(results, Is.Empty);
     }
+
+    [Test]
+    public void AddUser_DefaultsToUserRole()
+    {
+        var created = _repository.AddUser("nandu_p", "nandupanakanti@gmail.com", "Str0ngPassw0rd!");
+
+        Assert.That(created.Role, Is.EqualTo("user"));
+    }
+
+    [Test]
+    public void AddUser_AdminRole_IsStoredAndReturnedOnAuthentication()
+    {
+        _repository.AddUser("alice_admin", "alice@example.com", "Str0ngPassw0rd!", "admin");
+
+        var authenticated = _repository.AuthenticateUser("alice_admin", "Str0ngPassw0rd!");
+
+        Assert.That(authenticated, Is.Not.Null);
+        Assert.That(authenticated!.Role, Is.EqualTo("admin"));
+    }
+
+    [TestCase("superadmin")]
+    [TestCase("Admin")]
+    [TestCase("' OR '1'='1")]
+    public void AddUser_RejectsRoleOutsideAllowlist(string role)
+    {
+        Assert.That(() => _repository.AddUser("nandu_p", "nandupanakanti@gmail.com", "Str0ngPassw0rd!", role),
+            Throws.ArgumentException);
+
+        Assert.That(_repository.CountUsers(), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void AuthenticateUser_UnknownUsername_ReturnsNull()
+    {
+        Assert.That(_repository.AuthenticateUser("nobody", "whatever123"), Is.Null);
+    }
 }
